@@ -8,7 +8,7 @@
 //
 // ─────────────────────────────────────────────────────────────────────────────
 
-var SHEET_CSV_URL = https://docs.google.com/spreadsheets/d/e/2PACX-1vTuRf7W85gCIP2DuyxSDibDbwuAWvt0wRkKYeZVqn4-QZdXMZGXMeFQIr3XFjDWo4vO5EG82CNBr1SL/pub?gid=0&single=true&output=csv;
+var SHEET_CSV_URL = https://docs.google.com/spreadsheets/d/e/2PACX-1vTuRf7W85gCIP2DuyxSDibDbwuAWvt0wRkKYeZVqn4-QZdXMZGXMeFQIr3XFjDWo4vO5EG82CNBr1SL/pub?output=csv;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // OPTIONAL: Override crew names here if you want different names than
