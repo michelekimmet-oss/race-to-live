@@ -5,447 +5,287 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Race to LIVE — SmartSense CS Leaderboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@500&family=Bebas+Neue&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
 <style>
-/* ── RESET & VARS ─────────────────────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --blue:#004676;--orange:#DA572E;--yellow:#F3820A;--green:#84C361;
+  --white:#FFFFFF;--asphalt:#1C1C1E;--asphalt2:#252528;--charcoal:#4B4F53;
+  --lgray:#F2F3F3;--mgray:#E5E7E8;--border:#E2E5E9;--muted:#6B7280;--text:#1A1D23;
+  --gold:#FFD700;--silver:#C0C0C0;--bronze:#CD7F32;
+  --pale-blue:#EBF4FB;--pale-grn:#EAF3DE;--pale-org:#FAECE7;
+}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:#0f0f11;color:var(--text);min-height:100vh;overflow-x:hidden}
 
-:root {
-  --blue:      #004676;
-  --orange:    #DA572E;
-  --charcoal:  #4B4F53;
-  --lgray:     #F2F3F3;
-  --mgray:     #E5E7E8;
-  --green:     #84C361;
-  --amber:     #F3820A;
-  --sblue:     #0081B9;
-  --white:     #FFFFFF;
-  --text:      #1A1D23;
-  --muted:     #6B7280;
-  --border:    #E2E5E9;
-  --pale-blue: #EBF4FB;
-  --pale-grn:  #EAF3DE;
-  --pale-amb:  #FEF4E0;
-  --pale-org:  #FAECE7;
-}
+/* ── CHECKERED ── */
+.ckrd{background-image:linear-gradient(45deg,#000 25%,transparent 25%),linear-gradient(-45deg,#000 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#000 75%),linear-gradient(-45deg,transparent 75%,#000 75%);background-size:16px 16px;background-position:0 0,0 8px,8px -8px,-8px 0;background-color:#fff}
+.ckrd-sm{background-image:linear-gradient(45deg,#000 25%,transparent 25%),linear-gradient(-45deg,#000 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#000 75%),linear-gradient(-45deg,transparent 75%,#000 75%);background-size:10px 10px;background-position:0 0,0 5px,5px -5px,-5px 0;background-color:#fff}
 
-body {
-  font-family: 'DM Sans', sans-serif;
-  background: #F0F2F5;
-  color: var(--text);
-  min-height: 100vh;
-}
+/* ── SPEED LINES ── */
+@keyframes speedLine{0%{transform:translateX(-100%);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translateX(120vw);opacity:0}}
+.speed-lines{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.speed-line{position:absolute;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.18),transparent);animation:speedLine linear infinite}
 
-/* ── HEADER ───────────────────────────────────────────────────── */
-.site-header {
-  background: var(--blue);
-  padding: 0;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  box-shadow: 0 2px 16px rgba(0,0,0,0.18);
-}
-.header-inner {
-  max-width: 1080px;
-  margin: 0 auto;
-  padding: 16px 24px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-}
-.header-brand { display: flex; align-items: center; gap: 14px; }
-.header-flag { font-size: 28px; }
-.brand-title {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 30px;
-  color: var(--white);
-  letter-spacing: 1px;
-  line-height: 1;
-}
-.brand-sub { font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 2px; }
-.header-meta { text-align: right; }
-.live-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: var(--orange);
-  color: white;
-  font-size: 11px;
-  font-weight: 600;
-  padding: 4px 12px;
-  border-radius: 20px;
-  letter-spacing: 0.06em;
-  margin-bottom: 4px;
-}
-.live-dot {
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: white;
-  animation: pulse 1.8s infinite;
-}
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
-.update-time { font-size: 11px; color: rgba(255,255,255,0.5); }
+/* ── HEADER ── */
+.site-header{position:relative;background:var(--asphalt);overflow:hidden}
+.checker-band{height:18px;opacity:.9}
+.checker-band-sm{height:13px;opacity:.65}
+.header-inner{max-width:1100px;margin:0 auto;padding:20px 28px 22px;display:flex;align-items:center;justify-content:space-between;gap:16px;position:relative;z-index:2}
 
-/* ── NAV ─────────────────────────────────────────────────────── */
-.nav-bar {
-  background: var(--white);
-  border-bottom: 1px solid var(--border);
-}
-.nav-inner {
-  max-width: 1080px;
-  margin: 0 auto;
-  padding: 0 24px;
-  display: flex;
-  gap: 0;
-}
-.nav-btn {
-  padding: 13px 20px;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--muted);
-  cursor: pointer;
-  border: none;
-  border-bottom: 2px solid transparent;
-  background: none;
-  font-family: inherit;
-  transition: all 0.15s;
-}
-.nav-btn:hover { color: var(--charcoal); }
-.nav-btn.active { color: var(--blue); border-bottom-color: var(--orange); font-weight: 600; }
+/* animated road stripe */
+.road-stripe{position:absolute;bottom:0;left:0;right:0;height:4px;background:var(--asphalt2);overflow:hidden}
+.road-stripe::before{content:'';position:absolute;top:50%;left:-100%;transform:translateY(-50%);height:2px;width:200%;background:repeating-linear-gradient(90deg,var(--yellow) 0,var(--yellow) 40px,transparent 40px,transparent 80px);animation:roadScroll 1.4s linear infinite}
+@keyframes roadScroll{to{left:0%}}
 
-/* ── MAIN ────────────────────────────────────────────────────── */
-.main {
-  max-width: 1080px;
-  margin: 0 auto;
-  padding: 28px 24px 60px;
-}
+.brand-left{display:flex;align-items:center;gap:16px}
+.brand-eyebrow{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--orange);font-weight:700;margin-bottom:3px}
+.brand-title{font-family:'Bebas Neue',sans-serif;font-size:56px;color:var(--white);letter-spacing:3px;line-height:.9;text-shadow:0 0 40px rgba(218,87,46,.4)}
+.brand-title span{color:var(--orange)}
+.brand-sub{font-size:12px;color:rgba(255,255,255,.4);margin-top:5px;letter-spacing:.05em}
 
-/* ── SUMMARY STRIP ───────────────────────────────────────────── */
-.summary-strip {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-  margin-bottom: 24px;
-}
-@media(max-width:700px){ .summary-strip { grid-template-columns: repeat(2,1fr); } }
-.stat-card {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 16px 18px;
-}
-.stat-label { font-size: 11px; font-weight: 600; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 6px; }
-.stat-value { font-size: 28px; font-weight: 600; color: var(--blue); font-family: 'DM Mono', monospace; line-height: 1; }
-.stat-sub { font-size: 12px; color: var(--muted); margin-top: 5px; }
+.header-right{text-align:right;flex-shrink:0}
+.live-badge{display:inline-flex;align-items:center;gap:7px;background:var(--orange);color:white;font-size:11px;font-weight:700;padding:5px 14px;letter-spacing:.12em;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);margin-bottom:6px}
+.live-dot{width:7px;height:7px;border-radius:50%;background:white;animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.8)}}
+.update-time{font-size:11px;color:rgba(255,255,255,.3)}
 
-/* ── MILESTONE STRIP ─────────────────────────────────────────── */
-.milestone-strip {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-  margin-bottom: 24px;
-}
-@media(max-width:700px){ .milestone-strip { grid-template-columns: repeat(2,1fr); } }
-.milestone-card {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 14px;
-  position: relative;
-  overflow: hidden;
-}
-.milestone-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 3px;
-}
-.mc-may::before  { background: var(--sblue); }
-.mc-jun::before  { background: var(--green); }
-.mc-jul::before  { background: var(--amber); }
-.mc-aug::before  { background: var(--orange); }
-.mc-active { border-color: var(--orange) !important; }
-.mc-active::before { background: var(--orange) !important; }
-.m-month { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 3px; }
-.m-name  { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
-.m-prize { font-size: 11px; font-weight: 600; color: var(--orange); margin-bottom: 8px; }
-.m-leader-label { font-size: 10px; color: var(--muted); }
-.m-leader-name  { font-size: 12px; font-weight: 600; color: var(--blue); }
+/* ── NAV ── */
+.nav-bar{background:#18181b;border-bottom:1px solid rgba(255,255,255,.08);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 28px;display:flex}
+.nav-btn{padding:14px 22px;font-size:11px;font-weight:700;color:rgba(255,255,255,.35);cursor:pointer;border:none;border-bottom:3px solid transparent;background:none;font-family:'DM Sans',sans-serif;letter-spacing:.08em;text-transform:uppercase;transition:all .15s}
+.nav-btn:hover{color:rgba(255,255,255,.7)}
+.nav-btn.active{color:var(--orange);border-bottom-color:var(--orange)}
 
-/* ── LEADERBOARD ─────────────────────────────────────────────── */
-.section-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 14px;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-.section-title { font-size: 16px; font-weight: 600; }
-.section-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+/* ── MAIN ── */
+.main{max-width:1100px;margin:0 auto;padding:28px 28px 80px}
 
-.month-pills { display: flex; gap: 6px; flex-wrap: wrap; }
-.month-pill {
-  padding: 5px 14px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 500;
-  cursor: pointer;
-  border: 1px solid var(--border);
-  background: var(--white);
-  color: var(--muted);
-  font-family: inherit;
-  transition: all 0.15s;
-}
-.month-pill.active { background: var(--blue); color: white; border-color: var(--blue); font-weight: 600; }
+/* ── STAT CARDS ── */
+.summary-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+@media(max-width:720px){.summary-strip{grid-template-columns:repeat(2,1fr)}}
+.stat-card{background:#1e1e22;border:1px solid rgba(255,255,255,.08);border-radius:4px;padding:18px 20px;position:relative;overflow:hidden}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--orange),var(--yellow))}
+.stat-label{font-size:10px;font-weight:700;color:rgba(255,255,255,.3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px}
+.stat-value{font-family:'Bebas Neue',sans-serif;font-size:38px;color:var(--white);line-height:1;letter-spacing:1px}
+.stat-sub{font-size:11px;color:rgba(255,255,255,.28);margin-top:5px}
 
-.lb-wrap {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  overflow: hidden;
-  margin-bottom: 28px;
-}
-.lb-table { width: 100%; border-collapse: collapse; }
-.lb-table thead tr { background: var(--lgray); }
-.lb-table th {
-  padding: 10px 14px;
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  text-align: left;
-  border-bottom: 1px solid var(--border);
-}
-.lb-table th.r { text-align: right; }
-.lb-table tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
-.lb-table tbody tr:last-child { border-bottom: none; }
-.lb-table tbody tr:hover { background: #FAFBFC; }
-.lb-table td { padding: 11px 14px; font-size: 14px; }
-.lb-table td.r { text-align: right; }
+/* ── MILESTONE STRIP ── */
+.milestone-strip{display:grid;grid-template-columns:repeat(4,1fr);margin-bottom:28px;border-radius:6px;overflow:hidden;border:1px solid rgba(255,255,255,.08)}
+@media(max-width:720px){.milestone-strip{grid-template-columns:repeat(2,1fr)}}
+.milestone-card{background:#1e1e22;padding:16px;position:relative;border-right:1px solid rgba(255,255,255,.06)}
+.milestone-card:last-child{border-right:none}
+.milestone-card.mc-active{background:#252528}
+.milestone-card.mc-active::after{content:'NOW';position:absolute;top:8px;right:8px;font-size:8px;font-weight:800;letter-spacing:.15em;color:var(--orange);background:rgba(218,87,46,.15);padding:2px 6px;border-radius:2px}
+.m-month{font-size:9px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-bottom:4px}
+.m-name{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--white);letter-spacing:1px;line-height:1;margin-bottom:4px}
+.m-accent{height:2px;background:linear-gradient(90deg,var(--orange),transparent);margin-bottom:7px;border-radius:1px}
+.m-prize{font-size:13px;font-weight:700;color:var(--yellow);margin-bottom:10px}
+.m-leader-label{font-size:9px;color:rgba(255,255,255,.22);letter-spacing:.1em;text-transform:uppercase}
+.m-leader-name{font-size:13px;font-weight:700;color:var(--orange);margin-top:2px}
 
-.rank {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 26px; height: 26px;
-  border-radius: 50%;
-  font-size: 11px;
-  font-weight: 700;
-}
-.rank-1 { background: #FFF3CD; color: #92600A; }
-.rank-2 { background: #E8E8E8; color: #4B4F53; }
-.rank-3 { background: #FDEBD0; color: #7D3C00; }
-.rank-n { background: var(--lgray); color: var(--muted); }
+/* ── SECTION HEADER ── */
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px}
+.section-title{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--white);letter-spacing:2px}
+.section-sub{font-size:12px;color:rgba(255,255,255,.28);margin-top:2px}
+.month-pills{display:flex;gap:6px;flex-wrap:wrap}
+.month-pill{padding:5px 14px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;border:1px solid rgba(255,255,255,.1);background:#1e1e22;color:rgba(255,255,255,.35);font-family:'DM Sans',sans-serif;transition:all .15s;clip-path:polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%)}
+.month-pill.active{background:var(--orange);color:white;border-color:var(--orange)}
 
-.crew-pill {
-  display: inline-block;
-  padding: 2px 9px;
-  border-radius: 20px;
-  font-size: 11px;
-  font-weight: 600;
-  white-space: nowrap;
-}
-.cp-1 { background: var(--pale-blue); color: #0C447C; }
-.cp-2 { background: var(--pale-grn);  color: #27500A; }
-.cp-3 { background: var(--pale-org);  color: #712B13; }
+/* ── PODIUM ── */
+.podium-row{display:grid;grid-template-columns:1fr 1.12fr 1fr;gap:8px;margin-bottom:12px;align-items:end}
+@media(max-width:600px){.podium-row{display:none}}
+.podium-card{border-radius:6px 6px 0 0;padding:16px 12px 14px;text-align:center;position:relative}
+.podium-1{background:linear-gradient(180deg,rgba(255,215,0,.14) 0%,rgba(255,215,0,.04) 100%);border:1px solid rgba(255,215,0,.22);border-bottom:none}
+.podium-2{background:linear-gradient(180deg,rgba(192,192,192,.1) 0%,rgba(192,192,192,.03) 100%);border:1px solid rgba(192,192,192,.15);border-bottom:none}
+.podium-3{background:linear-gradient(180deg,rgba(205,127,50,.1) 0%,rgba(205,127,50,.03) 100%);border:1px solid rgba(205,127,50,.15);border-bottom:none}
+.podium-medal{font-size:26px;margin-bottom:4px}
+.podium-name{font-size:13px;font-weight:700;color:var(--white);margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.podium-crew{font-size:10px;color:rgba(255,255,255,.3);margin-bottom:6px}
+.podium-miles{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:1px}
+.pm-1{color:var(--gold)}.pm-2{color:var(--silver)}.pm-3{color:var(--bronze)}
+.podium-label{font-size:9px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.22)}
 
-.bar-wrap { display: flex; align-items: center; gap: 8px; }
-.bar-bg { flex: 1; height: 5px; background: var(--mgray); border-radius: 3px; min-width: 60px; overflow: hidden; }
-.bar-fill { height: 100%; border-radius: 3px; background: var(--orange); transition: width 0.4s ease; }
-.bar-num { font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500; color: var(--blue); min-width: 28px; text-align: right; }
+/* ── LEADERBOARD TABLE ── */
+.lb-wrap{background:#1a1a1e;border:1px solid rgba(255,255,255,.07);border-radius:6px;overflow:hidden;margin-bottom:32px}
+.lb-table{width:100%;border-collapse:collapse}
+.lb-table thead tr{background:#111114;border-bottom:1px solid rgba(255,255,255,.06)}
+.lb-table th{padding:11px 16px;font-size:9px;font-weight:800;color:rgba(255,255,255,.28);text-transform:uppercase;letter-spacing:.15em;text-align:left}
+.lb-table th.r{text-align:right}
+.lb-table tbody tr{border-bottom:1px solid rgba(255,255,255,.04);transition:background .12s}
+.lb-table tbody tr:last-child{border-bottom:none}
+.lb-table tbody tr:hover{background:rgba(255,255,255,.03)}
+.lb-table tbody tr.pos-1{background:linear-gradient(90deg,rgba(255,215,0,.07) 0%,transparent 60%)}
+.lb-table tbody tr.pos-2{background:linear-gradient(90deg,rgba(192,192,192,.05) 0%,transparent 60%)}
+.lb-table tbody tr.pos-3{background:linear-gradient(90deg,rgba(205,127,50,.05) 0%,transparent 60%)}
+.lb-table tbody tr.pos-1:hover{background:linear-gradient(90deg,rgba(255,215,0,.11) 0%,transparent 60%)}
+.lb-table td{padding:12px 16px;font-size:14px;color:rgba(255,255,255,.82)}
+.lb-table td.r{text-align:right}
+.rank-wrap{display:flex;align-items:center;gap:8px}
+.rank{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:.5px;flex-shrink:0;clip-path:polygon(4px 0%,100% 0%,calc(100% - 4px) 100%,0% 100%)}
+.rank-1{background:var(--gold);color:#5a3e00}
+.rank-2{background:var(--silver);color:#333}
+.rank-3{background:var(--bronze);color:#fff}
+.rank-n{background:rgba(255,255,255,.08);color:rgba(255,255,255,.35)}
+.flame{font-size:16px;animation:flicker .8s ease-in-out infinite alternate}
+@keyframes flicker{from{transform:scale(1) rotate(-3deg)}to{transform:scale(1.12) rotate(3deg)}}
+.csm-name{font-weight:600;color:var(--white)}
+.crew-pill{display:inline-block;padding:3px 10px;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;clip-path:polygon(5px 0%,100% 0%,calc(100% - 5px) 100%,0% 100%)}
+.cp-1{background:rgba(0,129,185,.22);color:#7ec8e3}
+.cp-2{background:rgba(132,195,97,.18);color:#a8d87a}
+.cp-3{background:rgba(218,87,46,.18);color:#f09070}
+.miles-num{font-family:'DM Mono',monospace;color:rgba(255,255,255,.5)}
+.miles-total{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1px;color:var(--orange)}
+.boost-tag{display:inline-block;font-size:10px;font-weight:700;background:rgba(243,130,10,.2);color:var(--yellow);padding:2px 7px;border-radius:2px;margin-left:4px}
+.bar-wrap{display:flex;align-items:center;gap:8px;justify-content:flex-end}
+.bar-bg{width:90px;height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden}
+.bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--orange),var(--yellow));transition:width .6s cubic-bezier(.4,0,.2,1);position:relative}
+.bar-fill::after{content:'';position:absolute;top:0;left:-100%;right:0;bottom:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent);animation:shimmer 2s infinite}
+@keyframes shimmer{to{left:200%}}
 
-.boost-tag {
-  display: inline-block;
-  font-size: 10px;
-  font-weight: 700;
-  background: #FFF3CD;
-  color: #92600A;
-  padding: 1px 6px;
-  border-radius: 4px;
-  margin-left: 4px;
-}
+/* ── RACE DIVIDER ── */
+.race-divider{height:26px;background:#111;border-radius:2px;overflow:hidden;margin:4px 0 22px;position:relative}
+.race-divider::before{content:'';position:absolute;top:50%;left:-60px;transform:translateY(-50%);height:3px;width:calc(100% + 120px);background:repeating-linear-gradient(90deg,var(--yellow) 0,var(--yellow) 28px,transparent 28px,transparent 56px);animation:roadScroll 1s linear infinite}
 
-/* ── CREWS ───────────────────────────────────────────────────── */
-.crew-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 14px;
-  margin-bottom: 28px;
-}
-@media(max-width:700px){ .crew-grid { grid-template-columns: 1fr; } }
-.crew-card {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  overflow: hidden;
-}
-.crew-head { padding: 14px 16px; }
-.ch-1 { background: var(--pale-blue); }
-.ch-2 { background: var(--pale-grn); }
-.ch-3 { background: var(--pale-org); }
-.crew-label { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 4px; }
-.cl-1 { color: #185FA5; }
-.cl-2 { color: #3B6D11; }
-.cl-3 { color: #993C1D; }
-.crew-name-big { font-size: 18px; font-weight: 700; }
-.cn-1 { color: #0C447C; }
-.cn-2 { color: #27500A; }
-.cn-3 { color: #712B13; }
-.crew-total-row { display: flex; align-items: baseline; gap: 6px; margin-top: 8px; }
-.crew-total-num { font-size: 28px; font-weight: 700; font-family: 'DM Mono', monospace; color: var(--charcoal); }
-.crew-total-label { font-size: 12px; color: var(--muted); }
-.crew-members { padding: 4px 0; }
-.cm-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 8px 16px;
-  border-top: 1px solid var(--border);
-  font-size: 13px;
-}
-.cm-name { color: var(--text); }
-.cm-miles { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--muted); }
-.crew-winner-badge {
-  font-size: 10px;
-  font-weight: 700;
-  background: var(--orange);
-  color: white;
-  padding: 2px 8px;
-  border-radius: 20px;
-  margin-left: 8px;
-}
+/* ── CREWS ── */
+.crew-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:32px}
+@media(max-width:720px){.crew-grid{grid-template-columns:1fr}}
+.crew-card{background:#1a1a1e;border:1px solid rgba(255,255,255,.07);border-radius:6px;overflow:hidden;position:relative}
+.crew-card.crew-leading::before{content:'';position:absolute;top:0;left:0;bottom:0;width:3px;background:linear-gradient(180deg,var(--yellow),var(--orange),#C0392B)}
+.crew-head{padding:18px 18px 14px;position:relative;overflow:hidden}
+.ch-1{background:linear-gradient(135deg,rgba(0,70,118,.45) 0%,rgba(0,0,0,0) 100%);border-bottom:1px solid rgba(0,129,185,.18)}
+.ch-2{background:linear-gradient(135deg,rgba(39,80,10,.45) 0%,rgba(0,0,0,0) 100%);border-bottom:1px solid rgba(132,195,97,.18)}
+.ch-3{background:linear-gradient(135deg,rgba(113,43,19,.45) 0%,rgba(0,0,0,0) 100%);border-bottom:1px solid rgba(218,87,46,.18)}
+.crew-label{font-size:9px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;margin-bottom:4px}
+.cl-1{color:#7ec8e3}.cl-2{color:#a8d87a}.cl-3{color:#f09070}
+.crew-name-big{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:2px;color:var(--white);margin-bottom:10px;line-height:1}
+.crew-odometer{display:flex;align-items:baseline;gap:6px}
+.crew-total-num{font-family:'Bebas Neue',sans-serif;font-size:42px;color:var(--white);letter-spacing:2px;line-height:1}
+.crew-total-label{font-size:11px;color:rgba(255,255,255,.28);letter-spacing:.05em}
+.crew-lead-badge{display:inline-block;font-size:9px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;background:var(--orange);color:white;padding:3px 9px;clip-path:polygon(5px 0%,100% 0%,calc(100% - 5px) 100%,0% 100%);margin-left:8px;vertical-align:middle}
+.crew-members{padding:4px 0}
+.cm-row{display:flex;align-items:center;justify-content:space-between;padding:9px 18px;border-top:1px solid rgba(255,255,255,.04);font-size:13px}
+.cm-name{color:rgba(255,255,255,.72)}
+.cm-miles{font-family:'DM Mono',monospace;font-size:12px;color:rgba(255,255,255,.3)}
 
-/* ── HOW IT WORKS TAB ────────────────────────────────────────── */
-.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-@media(max-width:700px){ .info-grid { grid-template-columns: 1fr; } }
-.info-card {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 20px;
-}
-.info-card h3 { font-size: 15px; font-weight: 700; color: var(--blue); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
-.info-card h3 span { font-size: 18px; }
-.info-card p { font-size: 13px; color: var(--charcoal); line-height: 1.6; margin-bottom: 8px; }
-.boost-list { list-style: none; }
-.boost-list li {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 8px 0;
-  border-bottom: 1px solid var(--border);
-  font-size: 13px;
-}
-.boost-list li:last-child { border-bottom: none; }
-.boost-pts {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--orange);
-  min-width: 32px;
-  font-family: 'DM Mono', monospace;
-}
-.prize-table { width: 100%; border-collapse: collapse; margin-top: 4px; }
-.prize-table th, .prize-table td { padding: 8px 10px; font-size: 12px; text-align: left; border-bottom: 1px solid var(--border); }
-.prize-table th { font-weight: 700; color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; }
-.prize-table tbody tr:last-child td { border-bottom: none; }
-.prize-month { font-weight: 700; color: var(--blue); }
-.prize-amt { font-weight: 700; color: var(--orange); font-family: 'DM Mono', monospace; }
+/* ── HOW IT WORKS ── */
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:720px){.info-grid{grid-template-columns:1fr}}
+.info-card{background:#1a1a1e;border:1px solid rgba(255,255,255,.07);border-radius:6px;padding:22px}
+.info-card h3{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1.5px;color:var(--white);margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.info-card p{font-size:13px;color:rgba(255,255,255,.5);line-height:1.7;margin-bottom:10px}
+.boost-list{list-style:none;margin-top:8px}
+.boost-list li{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:13px;color:rgba(255,255,255,.6)}
+.boost-list li:last-child{border-bottom:none}
+.boost-pts{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:1px;color:var(--orange);min-width:36px}
+.prize-table{width:100%;border-collapse:collapse;margin-top:8px}
+.prize-table th{padding:8px 10px;font-size:9px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.22);text-align:left;border-bottom:1px solid rgba(255,255,255,.06)}
+.prize-table td{padding:9px 10px;font-size:13px;color:rgba(255,255,255,.55);border-bottom:1px solid rgba(255,255,255,.04)}
+.prize-table tbody tr:last-child td{border-bottom:none}
+.prize-month{font-weight:700;color:rgba(255,255,255,.82)}
+.prize-amt{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--yellow);letter-spacing:1px}
 
-/* ── LOADING / ERROR ─────────────────────────────────────────── */
-.state-box {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 48px;
-  text-align: center;
-  color: var(--muted);
-  font-size: 14px;
-  line-height: 1.7;
-}
-.state-box .icon { font-size: 36px; margin-bottom: 12px; }
-.state-box a { color: var(--blue); }
-.spinner {
-  display: inline-block;
-  width: 32px; height: 32px;
-  border: 3px solid var(--mgray);
-  border-top-color: var(--orange);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-  margin-bottom: 12px;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
+/* ── STATE BOX ── */
+.state-box{background:#1a1a1e;border:1px solid rgba(255,255,255,.07);border-radius:6px;padding:56px;text-align:center;color:rgba(255,255,255,.28);font-size:14px;line-height:1.8}
+.state-box .icon{font-size:40px;margin-bottom:14px;display:block}
+.spinner{display:inline-block;width:32px;height:32px;border:3px solid rgba(255,255,255,.08);border-top-color:var(--orange);border-radius:50%;animation:spin .7s linear infinite;margin-bottom:14px}
+@keyframes spin{to{transform:rotate(360deg)}}
 
-/* ── FOOTER ──────────────────────────────────────────────────── */
-.site-footer {
-  background: var(--blue);
-  color: rgba(255,255,255,0.5);
-  font-size: 12px;
-  text-align: center;
-  padding: 20px;
-  margin-top: 40px;
-}
-.site-footer strong { color: white; }
+/* ── FOOTER ── */
+.footer-inner{background:var(--asphalt);color:rgba(255,255,255,.28);font-size:12px;text-align:center;padding:20px 24px}
+.footer-inner strong{color:rgba(255,255,255,.65)}
 
-/* ── HIDDEN ──────────────────────────────────────────────────── */
-.tab-content { display: none; }
-.tab-content.active { display: block; }
+/* ── UTILS ── */
+.tab-content{display:none}.tab-content.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.lb-wrap,.crew-card,.stat-card,.info-card{animation:fadeUp .4s ease both}
 </style>
 </head>
 <body>
 
-<script>
-// Google Sheet CSV URL — baked in directly, no config.js needed
-var SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTuRf7W85gCIP2DuyxSDibDbwuAWvt0wRkKYeZVqn4-QZdXMZGXMeFQIr3XFjDWo4vO5EG82CNBr1SL/pub?output=csv";
-</script>
-
 <header class="site-header">
+  <div class="speed-lines" id="speedLines"></div>
+  <div class="ckrd checker-band"></div>
+
   <div class="header-inner">
-    <div class="header-brand">
-      <div class="header-flag">🏁</div>
+    <div class="brand-left">
+      <!-- Hand-drawn SVG checkered flag -->
+      <svg width="58" height="68" viewBox="0 0 58 68" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0">
+        <rect x="4" y="0" width="4" height="68" rx="2" fill="#999"/>
+        <rect x="8" y="5" width="46" height="30" fill="white"/>
+        <!-- Checkered squares -->
+        <rect x="8"  y="5"  width="11.5" height="7.5" fill="#111"/>
+        <rect x="31" y="5"  width="11.5" height="7.5" fill="#111"/>
+        <rect x="19.5" y="12.5" width="11.5" height="7.5" fill="#111"/>
+        <rect x="42.5" y="12.5" width="11.5" height="7.5" fill="#111"/>
+        <rect x="8"  y="20" width="11.5" height="7.5" fill="#111"/>
+        <rect x="31" y="20" width="11.5" height="7.5" fill="#111"/>
+        <rect x="19.5" y="27.5" width="11.5" height="7.5" fill="#111"/>
+        <rect x="42.5" y="27.5" width="11.5" height="7.5" fill="#111"/>
+        <!-- flag gloss -->
+        <path d="M54 5 Q58 12 54 20 Q58 27 54 35 L8 35 L8 5 Z" fill="rgba(255,255,255,0.06)"/>
+        <!-- orange accent stripe at bottom of flag -->
+        <rect x="8" y="33" width="46" height="2" fill="#DA572E"/>
+      </svg>
+
       <div>
-        <div class="brand-title">Race to LIVE</div>
-        <div class="brand-sub">SmartSense Customer Success · 2026</div>
+        <div class="brand-eyebrow">SmartSense Customer Success · 2026</div>
+        <div class="brand-title">Race to <span>LIVE</span></div>
+        <div class="brand-sub">SmartSense LIVE Registration Contest · May – September 5</div>
       </div>
     </div>
-    <div class="header-meta">
-      <div class="live-badge"><span class="live-dot"></span> LIVE STANDINGS</div>
+
+    <div class="header-right">
+      <div><div class="live-badge"><span class="live-dot"></span> LIVE STANDINGS</div></div>
       <div class="update-time" id="updateTime">Loading...</div>
+      <!-- mini finish line graphic -->
+      <svg style="margin-top:12px;display:block;margin-left:auto" width="44" height="28" viewBox="0 0 44 28">
+        <rect x="0" y="0" width="11" height="7" fill="white"/><rect x="22" y="0" width="11" height="7" fill="white"/>
+        <rect x="11" y="7" width="11" height="7" fill="white"/><rect x="33" y="7" width="11" height="7" fill="white"/>
+        <rect x="0" y="14" width="11" height="7" fill="white"/><rect x="22" y="14" width="11" height="7" fill="white"/>
+        <rect x="11" y="21" width="11" height="7" fill="white"/><rect x="33" y="21" width="11" height="7" fill="white"/>
+        <rect x="11" y="0" width="11" height="7" fill="#111"/><rect x="33" y="0" width="11" height="7" fill="#111"/>
+        <rect x="0" y="7" width="11" height="7" fill="#111"/><rect x="22" y="7" width="11" height="7" fill="#111"/>
+        <rect x="11" y="14" width="11" height="7" fill="#111"/><rect x="33" y="14" width="11" height="7" fill="#111"/>
+        <rect x="0" y="21" width="11" height="7" fill="#111"/><rect x="22" y="21" width="11" height="7" fill="#111"/>
+        <rect width="44" height="28" fill="rgba(255,255,255,0.05)"/>
+      </svg>
     </div>
   </div>
+
+  <div class="road-stripe"></div>
+  <div class="ckrd-sm checker-band" style="height:13px;opacity:.65"></div>
 </header>
 
 <nav class="nav-bar">
   <div class="nav-inner">
-    <button class="nav-btn active" onclick="switchTab('leaderboard', this)">Leaderboard</button>
-    <button class="nav-btn" onclick="switchTab('crews', this)">Crew Standings</button>
-    <button class="nav-btn" onclick="switchTab('rules', this)">How It Works</button>
+    <button class="nav-btn active" onclick="switchTab('leaderboard',this)">🏁 Leaderboard</button>
+    <button class="nav-btn" onclick="switchTab('crews',this)">🚗 Crew Standings</button>
+    <button class="nav-btn" onclick="switchTab('rules',this)">📋 How It Works</button>
   </div>
 </nav>
 
 <main class="main">
 
-  <!-- ── LEADERBOARD TAB ────────────────────────────────────── -->
+  <!-- LEADERBOARD TAB -->
   <div class="tab-content active" id="tab-leaderboard">
     <div class="summary-strip" id="summaryStrip">
       <div class="stat-card"><div class="stat-label">Loading</div><div class="stat-value">—</div></div>
     </div>
     <div class="milestone-strip" id="milestoneStrip"></div>
+    <div class="podium-row" id="podiumRow"></div>
     <div class="section-header">
       <div>
-        <div class="section-title">Individual Standings</div>
-        <div class="section-sub">Total miles = registrations + bonus miles</div>
+        <div class="section-title">All Drivers</div>
+        <div class="section-sub">Total miles = registrations + nitro boost miles</div>
       </div>
       <div class="month-pills" id="monthPills"></div>
     </div>
     <div class="lb-wrap" id="lbWrap">
-      <div class="state-box"><div class="spinner"></div><div>Loading leaderboard...</div></div>
+      <div class="state-box"><div class="spinner"></div><div>Loading standings...</div></div>
     </div>
   </div>
 
-  <!-- ── CREWS TAB ──────────────────────────────────────────── -->
+  <!-- CREWS TAB -->
   <div class="tab-content" id="tab-crews">
     <div class="section-header" style="margin-bottom:20px;">
       <div>
@@ -454,18 +294,19 @@ var SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTuRf7W85gC
       </div>
       <div class="month-pills" id="crewMonthPills"></div>
     </div>
+    <div class="race-divider"></div>
     <div class="crew-grid" id="crewGrid">
-      <div class="stat-card"><div class="stat-label">Loading...</div></div>
+      <div class="state-box"><div class="spinner"></div></div>
     </div>
   </div>
 
-  <!-- ── RULES TAB ──────────────────────────────────────────── -->
+  <!-- RULES TAB -->
   <div class="tab-content" id="tab-rules">
     <div class="info-grid">
       <div class="info-card">
-        <h3><span>🗺️</span> How to earn miles</h3>
-        <p>Every confirmed SmartSense LIVE registration you land earns <strong>1 mile</strong>. The CSM with the most total miles at each checkpoint wins that month's prize.</p>
-        <p>There are also <strong>Nitro Boosts</strong> — bonus miles for key moments:</p>
+        <h3>🗺️ Earning Miles</h3>
+        <p>Every confirmed SmartSense LIVE registration earns <strong style="color:var(--orange)">1 mile</strong>. Top driver at each monthly checkpoint wins that month's prize.</p>
+        <p>Pick up extra miles with Nitro Boosts:</p>
         <ul class="boost-list">
           <li><span class="boost-pts">+2</span> First registration you land each month</li>
           <li><span class="boost-pts">+2</span> Enterprise or strategic account registers</li>
@@ -474,318 +315,222 @@ var SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTuRf7W85gC
         </ul>
       </div>
       <div class="info-card">
-        <h3><span>🎁</span> Monthly checkpoint prizes</h3>
+        <h3>🎁 Monthly Prizes</h3>
         <table class="prize-table">
-          <thead><tr><th>Month</th><th>Checkpoint</th><th>Top Individual</th><th>Top Crew</th></tr></thead>
+          <thead><tr><th>Month</th><th>Checkpoint</th><th>Top Driver</th><th>Top Crew</th></tr></thead>
           <tbody>
-            <tr><td class="prize-month">May</td><td>On Your Mark</td><td class="prize-amt">$10</td><td>$15/person</td></tr>
-            <tr><td class="prize-month">June</td><td>Getting in Gear</td><td class="prize-amt">$15</td><td>$15/person</td></tr>
-            <tr><td class="prize-month">July</td><td>Full Speed Ahead</td><td class="prize-amt">$25</td><td>$15/person</td></tr>
-            <tr><td class="prize-month">August</td><td>Final Sprint</td><td class="prize-amt">$50</td><td>$15/person</td></tr>
+            <tr><td class="prize-month">May</td><td>On Your Mark</td><td class="prize-amt">$10</td><td style="color:rgba(255,255,255,.45)">$15/ea</td></tr>
+            <tr><td class="prize-month">June</td><td>Getting in Gear</td><td class="prize-amt">$15</td><td style="color:rgba(255,255,255,.45)">$15/ea</td></tr>
+            <tr><td class="prize-month">July</td><td>Full Speed Ahead</td><td class="prize-amt">$25</td><td style="color:rgba(255,255,255,.45)">$15/ea</td></tr>
+            <tr><td class="prize-month">August</td><td>Final Sprint</td><td class="prize-amt">$50</td><td style="color:rgba(255,255,255,.45)">$15/ea</td></tr>
           </tbody>
         </table>
       </div>
       <div class="info-card">
-        <h3><span>👥</span> Crew challenge</h3>
-        <p>You compete on two tracks simultaneously — as an individual and as part of your crew. Three crews of 6 CSMs compete each month. The crew with the most combined miles wins <strong>coffee gift cards for the entire crew</strong>.</p>
+        <h3>👥 Crew Challenge</h3>
+        <p>Race on two tracks at once — individual and crew. Three crews of 6 CSMs compete each month. Monthly winning crew gets <strong style="color:var(--orange)">coffee gift cards for everyone.</strong></p>
         <p>Crews are balanced by tenure, account size, and book diversity.</p>
       </div>
       <div class="info-card">
-        <h3><span>🏆</span> Season champion — LIVE Legend</h3>
-        <p>The CSM with the <strong>highest total miles across all four months</strong> (May–August) wins the grand prize: a premium experience gift and <strong>recognition on stage at SmartSense LIVE</strong> in front of every customer in the room.</p>
-        <p>Season champion determined September 8. Announced at LIVE.</p>
-        <p style="margin-top:8px;font-size:12px;color:var(--muted);">Leaderboard updates every Monday. Report registrations in <strong>#race-to-live</strong> on Slack.</p>
+        <h3>🏆 LIVE Legend</h3>
+        <p>Highest total miles across all four months wins the grand prize: a premium experience gift and <strong style="color:var(--orange)">recognition on stage at SmartSense LIVE.</strong></p>
+        <p>Champion determined September 8. Announced at LIVE.</p>
+        <p style="font-size:12px;color:rgba(255,255,255,.22);margin-top:8px;">Report registrations in <strong style="color:rgba(255,255,255,.4)">#race-to-live</strong> on Slack · Updates every Monday</p>
       </div>
     </div>
   </div>
 
 </main>
 
-<footer class="site-footer">
-  <strong>Race to LIVE</strong> · SmartSense Customer Success · SmartSense LIVE: First week of October 2026 · Report registrations in #race-to-live on Slack
+<footer>
+  <div class="ckrd-sm" style="height:11px;opacity:.55"></div>
+  <div class="footer-inner">
+    <strong>Race to LIVE</strong> · SmartSense Customer Success · SmartSense LIVE: First week of October 2026 · #race-to-live on Slack
+  </div>
 </footer>
 
 <script>
-// ── CONFIG CHECK ──────────────────────────────────────────────────────────────
-if (typeof SHEET_CSV_URL === 'undefined' || SHEET_CSV_URL === 'YOUR_GOOGLE_SHEET_CSV_URL_HERE') {
-  document.getElementById('lbWrap').innerHTML = `
-    <div class="state-box">
-      <div class="icon">⚙️</div>
-      <strong>Setup needed</strong><br><br>
-      Open <code>config.js</code> and paste your Google Sheet CSV URL.<br>
-      See the setup guide for instructions.
-    </div>`;
-  document.getElementById('summaryStrip').innerHTML = '';
-  document.getElementById('updateTime').textContent = 'Not connected';
-}
+// ── CONFIG ────────────────────────────────────────────────────────────────────
+var SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTuRf7W85gCIP2DuyxSDibDbwuAWvt0wRkKYeZVqn4-QZdXMZGXMeFQIr3XFjDWo4vO5EG82CNBr1SL/pub?output=csv";
+
+// ── SPEED LINES ───────────────────────────────────────────────────────────────
+(function(){
+  const c = document.getElementById('speedLines');
+  for(let i=0;i<14;i++){
+    const el = document.createElement('div');
+    el.className = 'speed-line';
+    el.style.cssText = `top:${Math.random()*100}%;width:${60+Math.random()*200}px;animation-duration:${1.5+Math.random()*3}s;animation-delay:${-Math.random()*4}s;opacity:${.05+Math.random()*.12}`;
+    c.appendChild(el);
+  }
+})();
 
 // ── DATA ──────────────────────────────────────────────────────────────────────
 const MONTHS = [
-  { key: 'may', label: 'May',    name: 'On Your Mark',    prize: '$10', color: 'mc-may' },
-  { key: 'jun', label: 'June',   name: 'Getting in Gear', prize: '$15', color: 'mc-jun' },
-  { key: 'jul', label: 'July',   name: 'Full Speed Ahead',prize: '$25', color: 'mc-jul' },
-  { key: 'aug', label: 'August', name: 'Final Sprint',    prize: '$50', color: 'mc-aug' },
+  {key:'may',label:'May',   name:'On Your Mark',    prize:'$10'},
+  {key:'jun',label:'June',  name:'Getting in Gear', prize:'$15'},
+  {key:'jul',label:'July',  name:'Full Speed Ahead',prize:'$25'},
+  {key:'aug',label:'August',name:'Final Sprint',    prize:'$50'},
 ];
+const CREW_NAMES = {1:'Team Jolt',2:'Team SmartSense ONE',3:'Team LIVE'};
+let allCSMs=[], lbMonth='all', crewMonth='all';
 
-const CREW_NAMES = { 1: 'Team Jolt', 2: 'Team SmartSense ONE', 3: 'Team LIVE' };
-
-let allCSMs = [];
-let currentLbMonth = 'all';
-let currentCrewMonth = 'all';
-
-// ── CSV FETCH ─────────────────────────────────────────────────────────────────
-async function fetchData() {
-  if (typeof SHEET_CSV_URL === 'undefined' || SHEET_CSV_URL === 'YOUR_GOOGLE_SHEET_CSV_URL_HERE') return;
-
-  try {
-    // Add cache-buster so browsers always fetch fresh data
-    const url = SHEET_CSV_URL + (SHEET_CSV_URL.includes('?') ? '&' : '?') + '_cb=' + Date.now();
-    const res = await fetch(url);
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    const text = await res.text();
-    parseCSV(text);
+// ── FETCH ─────────────────────────────────────────────────────────────────────
+async function fetchData(){
+  try{
+    const r = await fetch(SHEET_CSV_URL+'&_cb='+Date.now());
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    parseCSV(await r.text());
     renderAll();
-    document.getElementById('updateTime').textContent = 'Updated ' + new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
-  } catch(e) {
-    document.getElementById('lbWrap').innerHTML = `
-      <div class="state-box">
-        <div class="icon">⚠️</div>
-        <strong>Could not load data</strong><br><br>
-        Make sure your Google Sheet is published to the web and the URL in <code>config.js</code> is correct.<br><br>
-        Error: ${e.message}
-      </div>`;
-    document.getElementById('updateTime').textContent = 'Load failed';
+    document.getElementById('updateTime').textContent =
+      'Updated '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  }catch(e){
+    document.getElementById('lbWrap').innerHTML=`<div class="state-box"><span class="icon">⚠️</span><strong style="color:white">Could not load data</strong><br><br>Check that the Google Sheet is published as CSV.<br><small>Error: ${e.message}</small></div>`;
+    document.getElementById('updateTime').textContent='Load failed';
   }
 }
 
-// ── PARSE CSV ─────────────────────────────────────────────────────────────────
-// Expected columns (row 1 = headers, skip):
-// A: Name | B: Crew (1/2/3) | C: Crew Name (optional override)
-// D: May Regs | E: May Boost
-// F: Jun Regs | G: Jun Boost
-// H: Jul Regs | I: Jul Boost
-// J: Aug Regs | K: Aug Boost
-
-function parseCSV(text) {
-  const rows = text.trim().split('\n').map(r => r.split(',').map(c => c.trim().replace(/^"|"$/g, '')));
-  if (rows.length < 2) return;
-
-  const data = rows.slice(1).filter(r => r[0]); // skip header, skip empty
-  allCSMs = data.map(r => {
-    const crew = parseInt(r[1]) || 1;
-    return {
-      name: r[0],
-      crew,
-      crewName: r[2] || CREW_NAMES[crew] || 'Crew ' + crew,
-      miles: {
-        may: { regs: parseInt(r[3])||0, boost: parseInt(r[4])||0 },
-        jun: { regs: parseInt(r[5])||0, boost: parseInt(r[6])||0 },
-        jul: { regs: parseInt(r[7])||0, boost: parseInt(r[8])||0 },
-        aug: { regs: parseInt(r[9])||0, boost: parseInt(r[10])||0 },
-      }
-    };
+function parseCSV(text){
+  const rows = text.trim().split('\n').map(r=>r.split(',').map(c=>c.trim().replace(/^"|"$/g,'')));
+  if(rows.length<2) return;
+  allCSMs = rows.slice(1).filter(r=>r[0]).map(r=>{
+    const crew=parseInt(r[1])||1;
+    return{name:r[0],crew,crewName:r[2]||CREW_NAMES[crew]||'Crew '+crew,
+      miles:{may:{regs:parseInt(r[3])||0,boost:parseInt(r[4])||0},
+             jun:{regs:parseInt(r[5])||0,boost:parseInt(r[6])||0},
+             jul:{regs:parseInt(r[7])||0,boost:parseInt(r[8])||0},
+             aug:{regs:parseInt(r[9])||0,boost:parseInt(r[10])||0}}};
   });
 }
 
 // ── HELPERS ───────────────────────────────────────────────────────────────────
-function monthTotal(csm, key) {
-  const m = csm.miles[key];
-  return (m.regs || 0) + (m.boost || 0);
-}
-
-function seasonTotal(csm) {
-  return MONTHS.reduce((s, m) => s + monthTotal(csm, m.key), 0);
-}
-
-function getTotal(csm, month) {
-  return month === 'all' ? seasonTotal(csm) : monthTotal(csm, month);
-}
-
-function sortedCSMs(month) {
-  return [...allCSMs].sort((a, b) => getTotal(b, month) - getTotal(a, month));
-}
-
-function crewTotal(crewNum, month) {
-  return allCSMs.filter(c => c.crew == crewNum).reduce((s, c) => s + getTotal(c, month), 0);
-}
-
-function monthLeader(key) {
-  const sorted = sortedCSMs(key);
-  return sorted[0] && monthTotal(sorted[0], key) > 0 ? sorted[0] : null;
-}
-
-function maxMiles(month) {
-  return Math.max(1, ...allCSMs.map(c => getTotal(c, month)));
-}
+const mTot=(c,k)=>(c.miles[k].regs||0)+(c.miles[k].boost||0);
+const sTot=c=>MONTHS.reduce((s,m)=>s+mTot(c,m.key),0);
+const gTot=(c,mo)=>mo==='all'?sTot(c):mTot(c,mo);
+const srtd=mo=>[...allCSMs].sort((a,b)=>gTot(b,mo)-gTot(a,mo));
+const cTot=(n,mo)=>allCSMs.filter(c=>c.crew==n).reduce((s,c)=>s+gTot(c,mo),0);
+const mLead=k=>{const s=srtd(k);return s[0]&&mTot(s[0],k)>0?s[0]:null};
+const maxM=mo=>Math.max(1,...allCSMs.map(c=>gTot(c,mo)));
 
 // ── RENDER ────────────────────────────────────────────────────────────────────
-function renderAll() {
-  renderSummary();
-  renderMilestones();
-  renderPills();
-  renderLeaderboard();
-  renderCrews();
+function renderAll(){renderSummary();renderMilestones();renderPills();renderPodium();renderLeaderboard();renderCrews();}
+
+function renderSummary(){
+  const tR=allCSMs.reduce((s,c)=>s+MONTHS.reduce((ms,m)=>ms+c.miles[m.key].regs,0),0);
+  const tB=allCSMs.reduce((s,c)=>s+MONTHS.reduce((ms,m)=>ms+c.miles[m.key].boost,0),0);
+  const lead=srtd('all')[0];
+  const cb=[1,2,3].map(n=>({n,t:cTot(n,'all')})).sort((a,b)=>b.t-a.t)[0];
+  const cN=cb&&cb.t>0?(allCSMs.find(c=>c.crew==cb.n)?.crewName||CREW_NAMES[cb.n]):'—';
+  document.getElementById('summaryStrip').innerHTML=`
+    <div class="stat-card"><div class="stat-label">Total Registrations</div><div class="stat-value">${tR}</div><div class="stat-sub">Across ${allCSMs.length} drivers</div></div>
+    <div class="stat-card"><div class="stat-label">Total Miles</div><div class="stat-value">${tR+tB}</div><div class="stat-sub">${tB} nitro miles</div></div>
+    <div class="stat-card"><div class="stat-label">Lead Driver</div><div class="stat-value" style="font-size:28px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${lead?lead.name.split(' ')[0]:'—'}</div><div class="stat-sub">${lead?sTot(lead)+' total miles':'No data yet'}</div></div>
+    <div class="stat-card"><div class="stat-label">Leading Crew</div><div class="stat-value" style="font-size:22px;line-height:1.1">${cN}</div><div class="stat-sub">${cb&&cb.t>0?cb.t+' combined miles':'No data yet'}</div></div>`;
 }
 
-function renderSummary() {
-  const totalRegs = allCSMs.reduce((s, c) => s + MONTHS.reduce((ms, m) => ms + c.miles[m.key].regs, 0), 0);
-  const totalBoost = allCSMs.reduce((s, c) => s + MONTHS.reduce((ms, m) => ms + c.miles[m.key].boost, 0), 0);
-  const leader = sortedCSMs('all')[0];
-  const crewBest = [1,2,3].map(n => ({ n, t: crewTotal(n, 'all') })).sort((a,b)=>b.t-a.t)[0];
-  const crewName = crewBest && crewBest.t > 0 ? (allCSMs.find(c=>c.crew==crewBest.n)?.crewName || CREW_NAMES[crewBest.n]) : '—';
-
-  document.getElementById('summaryStrip').innerHTML = `
-    <div class="stat-card">
-      <div class="stat-label">Total Registrations</div>
-      <div class="stat-value">${totalRegs}</div>
-      <div class="stat-sub">Across all ${allCSMs.length} CSMs</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Total Miles</div>
-      <div class="stat-value">${totalRegs + totalBoost}</div>
-      <div class="stat-sub">${totalBoost} bonus miles earned</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Individual Leader</div>
-      <div class="stat-value" style="font-size:20px;">${leader ? leader.name.split(' ')[0] : '—'}</div>
-      <div class="stat-sub">${leader ? seasonTotal(leader) + ' total miles' : 'No data yet'}</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Leading Crew</div>
-      <div class="stat-value" style="font-size:16px;line-height:1.2;">${crewName}</div>
-      <div class="stat-sub">${crewBest && crewBest.t > 0 ? crewBest.t + ' combined miles' : 'No data yet'}</div>
-    </div>`;
-}
-
-function renderMilestones() {
-  const now = new Date();
-  const monthNums = { may:4, jun:5, jul:6, aug:7 };
-  document.getElementById('milestoneStrip').innerHTML = MONTHS.map(m => {
-    const mn = monthNums[m.key];
-    const isActive = now.getMonth() === mn && now.getFullYear() === 2026;
-    const leader = monthLeader(m.key);
-    return `<div class="milestone-card ${m.color} ${isActive ? 'mc-active' : ''}">
-      <div class="m-month">${m.label}</div>
-      <div class="m-name">${m.name}</div>
-      <div class="m-prize">${m.prize} gift card</div>
+function renderMilestones(){
+  const now=new Date(), mN={may:4,jun:5,jul:6,aug:7};
+  document.getElementById('milestoneStrip').innerHTML=MONTHS.map(m=>{
+    const isA=now.getMonth()===mN[m.key]&&now.getFullYear()===2026;
+    const lead=mLead(m.key);
+    return`<div class="milestone-card ${isA?'mc-active':''}">
+      <div class="m-month">${m.label}</div><div class="m-name">${m.name}</div>
+      <div class="m-accent"></div><div class="m-prize">${m.prize} gift card</div>
       <div class="m-leader-label">Leader</div>
-      <div class="m-leader-name">${leader ? leader.name.split(' ')[0] : '—'}</div>
+      <div class="m-leader-name">${lead?lead.name.split(' ')[0]:'—'}</div>
     </div>`;
   }).join('');
 }
 
-function renderPills() {
-  const html = (sel, fn) =>
-    `<button class="month-pill ${sel==='all'?'active':''}" onclick="${fn}('all')">Season</button>` +
-    MONTHS.map(m => `<button class="month-pill ${sel===m.key?'active':''}" onclick="${fn}('${m.key}')">${m.label}</button>`).join('');
-  document.getElementById('monthPills').innerHTML = html(currentLbMonth, 'setLbMonth');
-  document.getElementById('crewMonthPills').innerHTML = html(currentCrewMonth, 'setCrewMonth');
+function renderPills(){
+  const mk=(sel,fn)=>`<button class="month-pill ${sel==='all'?'active':''}" onclick="${fn}('all')">Season</button>`+
+    MONTHS.map(m=>`<button class="month-pill ${sel===m.key?'active':''}" onclick="${fn}('${m.key}')">${m.label}</button>`).join('');
+  document.getElementById('monthPills').innerHTML=mk(lbMonth,'setLbMonth');
+  document.getElementById('crewMonthPills').innerHTML=mk(crewMonth,'setCrewMonth');
 }
 
-function renderLeaderboard() {
-  if (!allCSMs.length) {
-    document.getElementById('lbWrap').innerHTML = `<div class="state-box"><div class="icon">📋</div>No data yet — sheet may be empty.</div>`;
-    return;
-  }
-  const sorted = sortedCSMs(currentLbMonth);
-  const mx = maxMiles(currentLbMonth);
-  const rows = sorted.map((csm, i) => {
-    const regs = currentLbMonth === 'all'
-      ? MONTHS.reduce((s,m) => s + csm.miles[m.key].regs, 0)
-      : csm.miles[currentLbMonth].regs;
-    const boost = currentLbMonth === 'all'
-      ? MONTHS.reduce((s,m) => s + csm.miles[m.key].boost, 0)
-      : csm.miles[currentLbMonth].boost;
-    const total = regs + boost;
-    const pct = mx > 0 ? Math.round(total/mx*100) : 0;
-    const rankCls = i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':'rank-n';
-    const crewCls = 'cp-' + csm.crew;
-    return `<tr>
-      <td><span class="rank ${rankCls}">${i+1}</span></td>
-      <td style="font-weight:600;">${csm.name}</td>
-      <td><span class="crew-pill ${crewCls}">${csm.crewName}</span></td>
-      <td class="r" style="font-family:'DM Mono',monospace;">${regs}</td>
-      <td class="r">${boost > 0 ? '<span class="boost-tag">+'+boost+'</span>' : '<span style="color:var(--muted)">—</span>'}</td>
-      <td class="r" style="font-weight:700;color:var(--blue);font-family:\'DM Mono\',monospace;">${total}</td>
-      <td class="r" style="min-width:140px;">
-        <div class="bar-wrap">
-          <div class="bar-bg"><div class="bar-fill" style="width:${pct}%"></div></div>
-          <div class="bar-num">${total}</div>
-        </div>
-      </td>
+function renderPodium(){
+  const top=srtd(lbMonth).slice(0,3);
+  if(!top.length||!top[0]||gTot(top[0],lbMonth)===0){document.getElementById('podiumRow').innerHTML='';return;}
+  const order=[top[1],top[0],top[2]].filter(Boolean);
+  const pCls=['podium-2','podium-1','podium-3'];
+  const mCls=['pm-2','pm-1','pm-3'];
+  const medals=['🥈','🥇','🥉'];
+  document.getElementById('podiumRow').innerHTML=order.map((csm,i)=>{
+    const mi=gTot(csm,lbMonth),isFirst=i===1;
+    return`<div class="podium-card ${pCls[i]}">
+      <div class="podium-medal">${isFirst?'🔥':''}${medals[i]}</div>
+      <div class="podium-name">${csm.name}</div>
+      <div class="podium-crew">${csm.crewName}</div>
+      <div class="podium-miles ${mCls[i]}">${mi}</div>
+      <div class="podium-label">miles</div>
+    </div>`;
+  }).join('');
+}
+
+function renderLeaderboard(){
+  if(!allCSMs.length){document.getElementById('lbWrap').innerHTML=`<div class="state-box"><span class="icon">🏎️</span>No drivers yet — add your team to the Google Sheet.</div>`;return;}
+  const s=srtd(lbMonth),mx=maxM(lbMonth);
+  const rows=s.map((csm,i)=>{
+    const regs=lbMonth==='all'?MONTHS.reduce((t,m)=>t+csm.miles[m.key].regs,0):csm.miles[lbMonth].regs;
+    const boost=lbMonth==='all'?MONTHS.reduce((t,m)=>t+csm.miles[m.key].boost,0):csm.miles[lbMonth].boost;
+    const total=regs+boost,pct=mx>0?Math.round(total/mx*100):0;
+    const rCls=i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':'rank-n';
+    const rPos=i===0?'pos-1':i===1?'pos-2':i===2?'pos-3':'';
+    const flame=i===0&&total>0?'<span class="flame">🔥</span>':'';
+    return`<tr class="${rPos}">
+      <td><div class="rank-wrap"><span class="rank ${rCls}">${i+1}</span>${flame}</div></td>
+      <td class="csm-name">${csm.name}</td>
+      <td><span class="crew-pill cp-${csm.crew}">${csm.crewName}</span></td>
+      <td class="r miles-num">${regs}</td>
+      <td class="r">${boost>0?`<span class="boost-tag">+${boost}</span>`:'<span style="color:rgba(255,255,255,.18)">—</span>'}</td>
+      <td class="r"><span class="miles-total">${total}</span></td>
+      <td class="r"><div class="bar-wrap"><div class="bar-bg"><div class="bar-fill" style="width:${pct}%"></div></div></div></td>
     </tr>`;
   }).join('');
-
-  document.getElementById('lbWrap').innerHTML = `
+  document.getElementById('lbWrap').innerHTML=`
     <table class="lb-table">
-      <thead><tr>
-        <th style="width:40px;">#</th>
-        <th>CSM</th><th>Crew</th>
-        <th class="r">Regs</th>
-        <th class="r">Boost</th>
-        <th class="r">Miles</th>
-        <th class="r">Progress</th>
-      </tr></thead>
+      <thead><tr><th style="width:56px">Pos</th><th>Driver</th><th>Crew</th><th class="r">Regs</th><th class="r">Nitro</th><th class="r">Miles</th><th class="r" style="width:120px">Speed</th></tr></thead>
       <tbody>${rows}</tbody>
     </table>`;
 }
 
-function renderCrews() {
-  const crewNums = [1, 2, 3];
-  const crewData = crewNums.map(n => {
-    const members = allCSMs.filter(c => c.crew == n);
-    const name = members[0]?.crewName || CREW_NAMES[n] || 'Crew ' + n;
-    const total = crewTotal(n, currentCrewMonth);
-    const sorted = [...members].sort((a,b) => getTotal(b, currentCrewMonth) - getTotal(a, currentCrewMonth));
-    return { n, name, total, sorted };
-  }).sort((a, b) => b.total - a.total);
-
-  document.getElementById('crewGrid').innerHTML = crewData.map((cd, rank) => {
-    const memberRows = cd.sorted.map(m => `
-      <div class="cm-row">
-        <span class="cm-name">${m.name}</span>
-        <span class="cm-miles">${getTotal(m, currentCrewMonth)} mi</span>
-      </div>`).join('') || '<div class="cm-row" style="color:var(--muted);font-style:italic;">No members</div>';
-
-    return `<div class="crew-card">
-      <div class="crew-head ch-${cd.n}">
-        <div class="crew-label cl-${cd.n}">Crew ${cd.n} ${rank===0 && cd.total>0 ? '<span style="float:right;">🏆</span>' : ''}</div>
-        <div class="crew-name-big cn-${cd.n}">${cd.name}</div>
-        <div class="crew-total-row">
-          <div class="crew-total-num">${cd.total}</div>
-          <div class="crew-total-label">combined miles</div>
-          ${rank===0 && cd.total>0 ? '<span class="crew-winner-badge">LEADING</span>' : ''}
+function renderCrews(){
+  const cd=[1,2,3].map(n=>{
+    const members=allCSMs.filter(c=>c.crew==n);
+    return{n,name:members[0]?.crewName||CREW_NAMES[n]||'Crew '+n,total:cTot(n,crewMonth),
+      members:[...members].sort((a,b)=>gTot(b,crewMonth)-gTot(a,crewMonth))};
+  }).sort((a,b)=>b.total-a.total);
+  document.getElementById('crewGrid').innerHTML=cd.map((c,rank)=>{
+    const lead=rank===0&&c.total>0;
+    const rows=c.members.map(m=>`<div class="cm-row"><span class="cm-name">${m.name}</span><span class="cm-miles">${gTot(m,crewMonth)} mi</span></div>`).join('')
+      ||'<div class="cm-row" style="color:rgba(255,255,255,.2);font-style:italic;font-size:12px">No members yet</div>';
+    return`<div class="crew-card ${lead?'crew-leading':''}">
+      <div class="crew-head ch-${c.n}">
+        <div class="crew-label cl-${c.n}">Crew ${c.n} ${lead?'🏆':''}</div>
+        <div class="crew-name-big">${c.name}</div>
+        <div class="crew-odometer">
+          <div class="crew-total-num">${c.total}</div>
+          <div class="crew-total-label">mi</div>
+          ${lead?'<span class="crew-lead-badge">Leading</span>':''}
         </div>
       </div>
-      <div class="crew-members">${memberRows}</div>
+      <div class="crew-members">${rows}</div>
     </div>`;
   }).join('');
 }
 
 // ── ACTIONS ───────────────────────────────────────────────────────────────────
-function switchTab(name, btn) {
-  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
-  document.getElementById('tab-' + name).classList.add('active');
+function switchTab(name,btn){
+  document.querySelectorAll('.tab-content').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(el=>el.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
   btn.classList.add('active');
 }
+function setLbMonth(m){lbMonth=m;renderPills();renderPodium();renderLeaderboard();}
+function setCrewMonth(m){crewMonth=m;renderPills();renderCrews();}
 
-function setLbMonth(m) {
-  currentLbMonth = m;
-  renderPills();
-  renderLeaderboard();
-}
-
-function setCrewMonth(m) {
-  currentCrewMonth = m;
-  renderPills();
-  renderCrews();
-}
-
-// ── INIT ──────────────────────────────────────────────────────────────────────
 fetchData();
-// Auto-refresh every 5 minutes
-setInterval(fetchData, 5 * 60 * 1000);
+setInterval(fetchData,5*60*1000);
 </script>
 </body>
 </html>
